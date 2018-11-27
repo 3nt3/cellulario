@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -12,6 +13,8 @@ var cells []cell
 var foodItems []food
 
 func SpawnFood(w http.ResponseWriter, r *http.Request) {
+	foodItems = []food{}
+
 	valuesSrc := []int{5, 10, 20}
 	rarities := []int{50, 40, 10}
 
@@ -29,14 +32,27 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
 
+		var pos []int
+		for i := 0; i < 2; i++ {
+			s := rand.NewSource(time.Now().UnixNano())
+			r := rand.New(s)
+			pos = append(pos, r.Intn(1000))
+		}
+
 		var newItem food
-		value := values[r1.Intn(100)]
+		value := values[r1.Intn(99)]
+		newItem = food{len(foodItems), pos, value}
 
 		foodItems = append(foodItems, newItem)
 	}
 
-	newItem := food{}
-	foodItems = append(foodItems, newItem)
+	log.Println(foodItems)
+
+	_ = json.NewEncoder(w).Encode(foodItems)
+}
+
+func GetFood(w http.ResponseWriter, r *http.Request) {
+	_ = json.NewEncoder(w).Encode(foodItems)
 }
 
 func CreateRoom(w http.ResponseWriter, r *http.Request) {

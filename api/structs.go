@@ -14,11 +14,11 @@ type cell struct {
 	kills int     `json:"kills"`
 	meals []cell  `json:"meals"`
 
-	pos []float64
+	pos []int `json:"pos"`
 }
 
 type food struct {
 	id    int `json:"id"`
-	pos   []int
-	value int
+	pos   []int `json:"pos"`
+	value int `json:"value"`
 }
