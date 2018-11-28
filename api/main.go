@@ -8,7 +8,6 @@ import (
 	"time"
 )
 
-var rooms []room
 var cells []cell
 var foodItems []food
 
@@ -55,9 +54,6 @@ func GetFood(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(foodItems)
 }
 
-func CreateRoom(w http.ResponseWriter, r *http.Request) {
-	_ = json.NewEncoder(w).Encode(1)
-}
 
 func GetCells(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(cells)

@@ -1,11 +1,5 @@
 package api
 
-type room struct {
-	id        int
-	cells     []cell
-	foodItems []food
-}
-
 type cell struct {
 	id   int `json:"id"`
 	name int `json:"name"`
