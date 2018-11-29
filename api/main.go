@@ -2,9 +2,11 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"log"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -63,6 +65,24 @@ func InitCell(w http.ResponseWriter, r *http.Request) {
 
 	newCell := cell{len(cells), name, 10, 0, []cell{}, pos}
 	cells = append(cells, newCell)
+}
+
+func UpdateSize(w http.ResponseWriter, r *http.Request) {
+	var size int
+	_ = json.NewDecoder(r.Body).Decode(&size)
+
+	id, _ := strconv.Atoi(mux.Vars(r)["cellId"])
+
+	cells[id].Size = size
+}
+
+func Eat(w http.ResponseWriter, r *http.Request) {
+
+	var cellId int
+	_ = json.NewDecoder(r.Body).Decode(&cellId)
+
+	cells[cellId].Alive = false
+
 }
 
 func GetFood(w http.ResponseWriter, r *http.Request) {

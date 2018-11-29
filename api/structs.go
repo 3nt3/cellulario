@@ -4,7 +4,9 @@ type cell struct {
 	Id   int
 	Name string
 
-	Size  float64
+	Alive bool
+
+	Size  int
 	Kills int
 	Meals []cell
 
