@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"log"
 	"math/rand"
 	"net/http"
@@ -52,7 +51,8 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 }
 
 func InitCell(w http.ResponseWriter, r *http.Request) {
-	args := mux.Vars(r)
+	var name string
+	_ = json.NewDecoder(r.Body).Decode(&name)
 
 	var pos []int
 	for i := 0; i < 2; i++ {
@@ -61,7 +61,7 @@ func InitCell(w http.ResponseWriter, r *http.Request) {
 		pos = append(pos, r.Intn(1000))
 	}
 
-	newCell := cell{len(cells), args["name"], 10, 0, []cell{}, pos}
+	newCell := cell{len(cells), name, 10, 0, []cell{}, pos}
 	cells = append(cells, newCell)
 }
 
