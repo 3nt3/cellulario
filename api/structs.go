@@ -1,18 +1,18 @@
 package api
 
 type cell struct {
-	id   int `json:"id"`
-	name int `json:"name"`
+	Id   int
+	Name string
 
-	size  float64 `json:"size"`
-	kills int     `json:"kills"`
-	meals []cell  `json:"meals"`
+	Size  float64
+	Kills int
+	Meals []cell
 
-	pos []int `json:"pos"`
+	Pos []int
 }
 
 type food struct {
-	id    int `json:"id"`
-	pos   []int `json:"pos"`
-	value int `json:"value"`
+	Id    int   `json:"id"`
+	Pos   []int `json:"pos"`
+	Value int   `json:"value"`
 }
