@@ -16,6 +16,8 @@ func main() {
 	r.HandleFunc("/getFood", api.GetFood).Methods("GET")
 	r.HandleFunc("/initCell", api.InitCell).Methods("POST")
 	r.HandleFunc("/eat", api.Eat).Methods("POST")
+	r.HandleFunc("/delall", api.Dellall).Methods("GET")
+	r.HandleFunc("/updateSize/{cellId}", api.UpdateSize).Methods("POST")
 
 	// In production use :80
 	go log.Fatal(http.ListenAndServe(":8000", r))
