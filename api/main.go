@@ -45,7 +45,7 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var newItem food
-		value := values[r1.Intn(19)]
+		value := values[r1.Intn(9)]
 		newItem = food{len(foodItems), pos, value}
 
 		foodItems = append(foodItems, newItem)
