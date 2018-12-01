@@ -21,7 +21,7 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 	foodItems = []food{}
 
 	valuesSrc := []int{5, 10, 20}
-	rarities := []int{50, 40, 10}
+	rarities := []int{5, 4, 1}
 
 	var values []int
 	for i := 0; i < 10; i++ {
