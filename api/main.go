@@ -21,7 +21,7 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 	foodItems = []food{}
 
 	valuesSrc := []int{5, 10, 20}
-	rarities := []int{50, 40, 10}
+	rarities := []int{5, 4, 1}
 
 	var values []int
 	for i := 0; i < 10; i++ {
@@ -33,7 +33,7 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 			values = append(values, valuesSrc[2])
 		}
 	}
-	for i := 0; i < 10; i++ {
+	for i := 0; i < len(values); i++ {
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
 
@@ -45,7 +45,7 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var newItem food
-		value := values[r1.Intn(19)]
+		value := values[r1.Intn(len(values))]
 		newItem = food{len(foodItems), pos, value}
 
 		foodItems = append(foodItems, newItem)
