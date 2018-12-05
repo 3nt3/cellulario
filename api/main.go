@@ -41,7 +41,7 @@ func SpawnFood(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < 2; i++ {
 			s := rand.NewSource(time.Now().UnixNano())
 			r := rand.New(s)
-			pos = append(pos, r.Intn(100))
+			pos = append(pos, r.Intn(2000)-1000)
 		}
 
 		var newItem food
@@ -69,7 +69,7 @@ func InitCell(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 2; i++ {
 		s := rand.NewSource(time.Now().UnixNano())
 		r := rand.New(s)
-		pos = append(pos, r.Intn(100))
+		pos = append(pos, r.Intn(2000)-1000)
 	}
 
 	newCell := cell{len(cells), name, true, 10, 0, []cell{}, pos}
