@@ -1,10 +1,13 @@
 package main
 
 import (
+	"cellulario/funcs"
+	"cellulario/structs"
+	"cellulario/vars"
+	"github.com/google/go-cmp/cmp"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	//"cellulario/structs"
 )
 
 var upgrader = websocket.Upgrader{
@@ -12,8 +15,6 @@ var upgrader = websocket.Upgrader{
 		return true;
 	},
 }
-
-//var initial  = true
 
 func main() {
 	http.HandleFunc("/", handler)
@@ -26,14 +27,41 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
+	// establish channel
 	msgs := make(chan string)
+	var oldState structs.GameState
+	initial := true
 
 	go read(msgs, conn)
 
 	for {
-		foo := <-msgs
-		log.Println(foo)
-		conn.WriteMessage(1, []byte(foo))
+		// check if it is the first iteration
+		if initial {
+			if len(vars.State.Food) == 0 {
+				vars.State.Food = funcs.SpawnFood()
+			}
+			oldState = vars.State
+			initial = false
+		} else {
+			// check if all the food is eaten
+			allDead := false
+
+			for _, item := range vars.State.Food {
+				if item.Alive {
+					break
+				} else {
+					allDead = true
+				}
+			}
+
+			if allDead {
+				vars.State.Food = funcs.SpawnFood()
+			}
+
+			if !cmp.Equal(vars.State, oldState) {
+				conn.WriteJSON(vars.State)
+			}
+		}
 	}
 }
 
