@@ -50,9 +50,7 @@ func SpawnFood() []structs.Food {
 	return vars.State.Food
 }
 
-func GetFood() []structs.Food {
-	return vars.State.Food
-}
+
 
 func InitCell(name string) structs.Cell {
 	var NewCell structs.Cell
@@ -105,10 +103,6 @@ func Eat(id int, mealId int, mealType string) []structs.Cell {
 
 		log.Printf("The player with id %d (%s) of size %d has eaten player %d (%s) of size %d. The new size of player %d is now %d", player.Id, player.Name, sizes[0], meal.Id, meal.Name, sizes[1], player.Id, player.Size)
 	}
-	return vars.State.Cells
-}
-
-func GetCells() []structs.Cell {
 	return vars.State.Cells
 }
 
