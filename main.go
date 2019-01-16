@@ -4,6 +4,7 @@ import (
 	"cellulario/funcs"
 	"cellulario/structs"
 	"cellulario/vars"
+	"encoding/json"
 	"github.com/google/go-cmp/cmp"
 	"github.com/gorilla/websocket"
 	"log"
@@ -12,7 +13,7 @@ import (
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		return true;
+		return true
 	},
 }
 
@@ -28,47 +29,68 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// establish channel
-	msgs := make(chan string)
+	msgs := make(chan structs.WsMsg)
 	var oldState structs.GameState
 	initial := true
 
 	go read(msgs, conn)
+	go checkState(conn)
 
 	for {
-		// check if it is the first iteration
-		if initial {
-			if len(vars.State.Food) == 0 {
-				vars.State.Food = funcs.SpawnFood()
-			}
-			oldState = vars.State
-			initial = false
-		} else {
-			// check if all the food is eaten
-			allDead := false
-
-			for _, item := range vars.State.Food {
-				if item.Alive {
-					break
-				} else {
-					allDead = true
-				}
-			}
-
-			if allDead {
-				vars.State.Food = funcs.SpawnFood()
-			}
-
-			if !cmp.Equal(vars.State, oldState) {
-				conn.WriteJSON(vars.State)
+		cresp := &structs.WsMsg{}
+		allDead := false
+		for _, item := range vars.State.Food {
+			if item.Alive {
+				break
+			} else {
+				allDead = true
 			}
 		}
+
+		if len(vars.State.Food) == 0 {
+			vars.State.Food = funcs.SpawnFood()
+		} else if allDead {
+			// check if the food needs to be respawned
+			vars.State.Food = funcs.SpawnFood()
+		} else {
+			// wait for user input
+			creq := <-msgs
+			cresp.Type = creq.Type
+			if creq.Type == "" {
+				continue
+			} else {
+				switch creq.Type {
+				case "changePos":
+
+				}
+			}
+		}
+		conn.WriteJSON(cresp)
 	}
 }
 
-func read(messages chan string, conn *websocket.Conn) {
+func read(messages chan structs.WsMsg, conn *websocket.Conn) {
 	for {
-		//fmt.Println(conn)
-		_, foo, _ := conn.ReadMessage()
-		messages <- string(foo)
+		creq := &structs.WsMsg{}
+		_ = conn.ReadJSON(creq)
+		messages <- *creq
 	}
+}
+
+func checkState(conn *websocket.Conn) {
+	var oldState structs.GameState
+	for {
+		if !cmp.Equal(vars.State, oldState) {
+			cresp := structs.WsMsg{"state", toInterface(vars.State)}
+			conn.WriteJSON(cresp)
+		}
+		oldState = vars.State
+	}
+}
+
+func toInterface(a interface{}) map[string]interface{} {
+	foo, _ := json.Marshal(a)
+	var bar interface{}
+	_ = json.Unmarshal(foo, &bar)
+	return bar.(map[string]interface{})
 }

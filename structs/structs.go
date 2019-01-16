@@ -6,18 +6,18 @@ type WsMsg struct {
 }
 
 type GameState struct {
-	Cells []Cell
-	Food []Food
+	Cells []Cell `json:"cells"`
+	Food  []Food `json:"food"`
 }
 
 type Cell struct {
-	Id   int `json:"id"`
+	Id   int    `json:"id"`
 	Name string `json:"name"`
 
 	Alive bool `json:"alive"`
 
-	Size  int `json:"size"`
-	Kills int `json:"kills"`
+	Size  int    `json:"size"`
+	Kills int    `json:"kills"`
 	Meals []Cell `json:"meals"`
 
 	Pos []int `json:"pos"`
