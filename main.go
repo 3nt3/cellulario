@@ -30,12 +30,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// establish channel
 	msgs := make(chan structs.WsMsg)
-	var oldState structs.GameState
-	initial := true
 
+	// goroutines
 	go read(msgs, conn)
 	go checkState(conn)
 
+	// main loop
 	for {
 		cresp := &structs.WsMsg{}
 		allDead := false
@@ -61,7 +61,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				switch creq.Type {
 				case "changePos":
+					var pos []int
+					for _, item := range creq.Data["pos"].([]interface{}) {
+						pos = append(pos, int(item.(float64)))
+					}
+					id := int(creq.Data["id"].(float64))
+					cresp.Data = toInterface(funcs.ChangePos(id, pos))
 
+				case "eat":
+					mealType := creq.Data["type"].(string)
+					mealId := int(creq.Data["mealId"].(float64))
+					id := int(creq.Data["id"].(float64))
+					cresp.Data = toInterface(funcs.Eat(id, mealId, mealType))
+
+				case "initCell":
+					name := creq.Data["name"].(string)
+					cresp.Data = toInterface(funcs.InitCell(name))
+
+				case "delall":
+					funcs.Delall()
 				}
 			}
 		}
