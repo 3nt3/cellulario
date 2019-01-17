@@ -67,7 +67,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 							pos = append(pos, int(item.(float64)))
 						}
 						id := int(creq.Data["id"].(float64))
-						cresp.Data = toInterface(funcs.ChangePos(id, pos))
+						funcs.ChangePos(id, pos)
 
 					case "eat":
 						mealType := creq.Data["type"].(string)
@@ -84,7 +84,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 			}
-			conn.WriteJSON(cresp)
 		} else {
 			// wait for user input
 			creq := <-msgs
@@ -95,9 +94,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 				case "ready":
 					ready = true
 					log.Printf("the client %v is ready!", conn.RemoteAddr())
+
+				case "initCell":
+					cresp.Type = "initCell"
+					name := creq.Data["name"].(string)
+					cresp.Data = toInterface(funcs.InitCell(name))
 				}
 			}
 		}
+		conn.WriteJSON(cresp)
 	}
 
 }
@@ -106,7 +111,11 @@ func read(messages chan structs.ClientRequest, conn *websocket.Conn) {
 	for {
 		creq := &structs.ClientRequest{}
 		if err := conn.ReadJSON(creq); err != nil {
-			conn.Close()
+			log.Fatal(err)
+			err := conn.Close()
+			if err != nil {
+				log.Panic(err)
+			}
 			break
 		}
 		messages <- *creq
@@ -128,7 +137,7 @@ func checkState(ready *bool, conn *websocket.Conn) {
 			}
 		}
 		oldState = state
-		time.Sleep(10 * time.Millisecond)
+		time.Sleep(5 * time.Millisecond)
 	}
 }
 

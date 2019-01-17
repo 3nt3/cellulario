@@ -103,7 +103,6 @@ func Eat(id int, mealId int, mealType string) []structs.Cell {
 	return vars.State.Cells
 }
 
-func ChangePos(id int, pos []int) []structs.Cell {
+func ChangePos(id int, pos []int) {
 	vars.State.Cells[id].Pos = pos
-	return vars.State.Cells
 }
