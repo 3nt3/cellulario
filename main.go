@@ -31,14 +31,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// establish channels
 	msgs := make(chan structs.ClientRequest)
+
 	ready := false
 
 	// goroutines
 	go read(msgs, conn)
+	go checkState(&ready, conn)
 
-	if ready {
-		go checkState(conn)
-	}
 	// main loop
 	for {
 		cresp := &structs.ClientResponse{}
@@ -95,11 +94,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 				switch creq.Type {
 				case "ready":
 					ready = true
-					log.Println("the client is ready!")
+					log.Printf("the client %v is ready!", conn.RemoteAddr())
 				}
 			}
 		}
 	}
+
 }
 
 func read(messages chan structs.ClientRequest, conn *websocket.Conn) {
@@ -113,9 +113,12 @@ func read(messages chan structs.ClientRequest, conn *websocket.Conn) {
 	}
 }
 
-func checkState(conn *websocket.Conn) {
+func checkState(ready *bool, conn *websocket.Conn) {
 	var oldState structs.GameState
 	for {
+		if !*ready {
+			continue
+		}
 		state := vars.State
 		if !cmp.Equal(vars.State, oldState) {
 			if len(vars.State.Food) != 0 {
@@ -125,7 +128,7 @@ func checkState(conn *websocket.Conn) {
 			}
 		}
 		oldState = state
-		time.Sleep(5 * time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 	}
 }
 
