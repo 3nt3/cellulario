@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"time"
 )
 
 var upgrader = websocket.Upgrader{
@@ -31,11 +32,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// establish channel
 	msgs := make(chan structs.ClientRequest)
 
-	spawnFoodDone := make(chan bool)
-
 	// goroutines
 	go read(msgs, conn)
-	go checkState(spawnFoodDone, conn)
+	go checkState(conn)
 
 	// main loop
 	for {
@@ -50,8 +49,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(vars.State.Food) == 0 || allDead {
-			foo := make(chan []structs.Food)
-			funcs.SpawnFood(&foo)
+			funcs.SpawnFood()
 		} else {
 			// wait for user input
 			creq := <-msgs
@@ -90,21 +88,26 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func read(messages chan structs.ClientRequest, conn *websocket.Conn) {
 	for {
 		creq := &structs.ClientRequest{}
-		_ = conn.ReadJSON(creq)
+		if err := conn.ReadJSON(creq); err != nil {
+			conn.Close()
+			break
+		}
 		messages <- *creq
 	}
 }
 
-func checkState(done chan bool, conn *websocket.Conn) {
+func checkState(conn *websocket.Conn) {
 	var oldState structs.GameState
 	for {
 		if !cmp.Equal(vars.State, oldState) {
-			_ = <-done
-			cresp := structs.ClientResponse{"state", toInterface(vars.State)}
-			log.Println(cresp)
-			conn.WriteJSON(cresp)
+			if len(vars.State.Food) != 0 {
+				cresp := structs.ClientResponse{"state", toInterface(vars.State)}
+				log.Println(cresp.Data.(map[string]interface{}), vars.State)
+				conn.WriteJSON(cresp)
+			}
 		}
 		oldState = vars.State
+		time.Sleep(5 * time.Millisecond)
 	}
 }
 

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func SpawnFood(food *chan []structs.Food) {
+func SpawnFood() {
 	valuesSrc := []int{1, 3, 5}
 	rarities := []int{5, 4, 1}
 
@@ -16,6 +16,8 @@ func SpawnFood(food *chan []structs.Food) {
 
 	var values []int
 	items := 50
+
+	var foodItems []structs.Food
 
 	for i := 0; i < items; i++ {
 		if len(values) < rarities[0] {
@@ -41,12 +43,10 @@ func SpawnFood(food *chan []structs.Food) {
 		value := values[r1.Intn(len(values))]
 		newItem = structs.Food{len(vars.State.Food), pos, value, true}
 
-		vars.State.Food = append(vars.State.Food, newItem)
+		foodItems = append(vars.State.Food, newItem)
 	}
 
-	log.Println(vars.State.Food)
-
-	*food <- vars.State.Food
+	vars.State.Food = foodItems
 }
 
 func InitCell(name string) structs.Cell {
