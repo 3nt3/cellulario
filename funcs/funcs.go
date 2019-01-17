@@ -43,7 +43,7 @@ func SpawnFood() {
 		value := values[r1.Intn(len(values))]
 		newItem = structs.Food{len(vars.State.Food), pos, value, true}
 
-		foodItems = append(vars.State.Food, newItem)
+		foodItems = append(foodItems, newItem)
 	}
 
 	vars.State.Food = foodItems

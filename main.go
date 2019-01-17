@@ -99,14 +99,15 @@ func read(messages chan structs.ClientRequest, conn *websocket.Conn) {
 func checkState(conn *websocket.Conn) {
 	var oldState structs.GameState
 	for {
+		state := vars.State
 		if !cmp.Equal(vars.State, oldState) {
 			if len(vars.State.Food) != 0 {
 				cresp := structs.ClientResponse{"state", toInterface(vars.State)}
-				log.Println(cresp.Data.(map[string]interface{}), vars.State)
+				log.Println(cresp.Data.(map[string]interface{}), state)
 				conn.WriteJSON(cresp)
 			}
 		}
-		oldState = vars.State
+		oldState = state
 		time.Sleep(5 * time.Millisecond)
 	}
 }
