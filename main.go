@@ -29,59 +29,76 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
-	// establish channel
+	// establish channels
 	msgs := make(chan structs.ClientRequest)
+	ready := false
 
 	// goroutines
 	go read(msgs, conn)
-	go checkState(conn)
 
+	if ready {
+		go checkState(conn)
+	}
 	// main loop
 	for {
 		cresp := &structs.ClientResponse{}
-		allDead := false
-		for _, item := range vars.State.Food {
-			if item.Alive {
-				break
-			} else {
-				allDead = true
+		if ready {
+			allDead := false
+			for _, item := range vars.State.Food {
+				if item.Alive {
+					break
+				} else {
+					allDead = true
+				}
 			}
-		}
 
-		if len(vars.State.Food) == 0 || allDead {
-			funcs.SpawnFood()
+			if len(vars.State.Food) == 0 || allDead {
+				funcs.SpawnFood()
+			} else {
+				// wait for user input
+				creq := <-msgs
+				cresp.Type = creq.Type
+				if creq.Type == "" {
+					continue
+				} else {
+					switch creq.Type {
+					case "changePos":
+						var pos []int
+						for _, item := range creq.Data["pos"].([]interface{}) {
+							pos = append(pos, int(item.(float64)))
+						}
+						id := int(creq.Data["id"].(float64))
+						cresp.Data = toInterface(funcs.ChangePos(id, pos))
+
+					case "eat":
+						mealType := creq.Data["type"].(string)
+						mealId := int(creq.Data["mealId"].(float64))
+						id := int(creq.Data["id"].(float64))
+						cresp.Data = toInterface(funcs.Eat(id, mealId, mealType))
+
+					case "initCell":
+						name := creq.Data["name"].(string)
+						cresp.Data = toInterface(funcs.InitCell(name))
+
+					case "delall":
+						funcs.Delall()
+					}
+				}
+			}
+			conn.WriteJSON(cresp)
 		} else {
 			// wait for user input
 			creq := <-msgs
-			cresp.Type = creq.Type
 			if creq.Type == "" {
 				continue
 			} else {
 				switch creq.Type {
-				case "changePos":
-					var pos []int
-					for _, item := range creq.Data["pos"].([]interface{}) {
-						pos = append(pos, int(item.(float64)))
-					}
-					id := int(creq.Data["id"].(float64))
-					cresp.Data = toInterface(funcs.ChangePos(id, pos))
-
-				case "eat":
-					mealType := creq.Data["type"].(string)
-					mealId := int(creq.Data["mealId"].(float64))
-					id := int(creq.Data["id"].(float64))
-					cresp.Data = toInterface(funcs.Eat(id, mealId, mealType))
-
-				case "initCell":
-					name := creq.Data["name"].(string)
-					cresp.Data = toInterface(funcs.InitCell(name))
-
-				case "delall":
-					funcs.Delall()
+				case "ready":
+					ready = true
+					log.Println("the client is ready!")
 				}
 			}
 		}
-		conn.WriteJSON(cresp)
 	}
 }
 
