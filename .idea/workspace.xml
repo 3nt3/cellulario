@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1cf9d725-ecfb-408e-b40c-6b0a9f261eff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cellulario" beforeDir="false" afterPath="$PROJECT_DIR$/cellulario" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/funcs/funcs.go" beforeDir="false" afterPath="$PROJECT_DIR$/funcs/funcs.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/structs/structs.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/structs.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -76,14 +78,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="go" value="4577" />
-          <entry key="txt" value="188" />
+          <entry key="go" value="5411" />
+          <entry key="txt" value="199" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="4577" />
-          <entry key="PLAIN_TEXT" value="188" />
+          <entry key="Go" value="5411" />
+          <entry key="PLAIN_TEXT" value="199" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -103,18 +105,18 @@
       </usages-collector>
       <usages-collector id="statistics.go.postfix.template.usages.trigger">
         <counts>
-          <entry key=".len" value="1" />
+          <entry key=".len" value="2" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+            <state relative-caret-position="356">
+              <caret line="101" column="22" selection-start-line="101" selection-start-column="22" selection-end-line="101" selection-end-column="22" />
               <folding>
                 <element signature="e#14#75#0" expanded="true" />
               </folding>
@@ -122,11 +124,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/funcs/funcs.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="768">
-              <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+            <state relative-caret-position="165">
+              <caret line="11" column="28" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
               <folding>
                 <element signature="e#15#79#0" expanded="true" />
               </folding>
@@ -147,7 +149,7 @@
         <entry file="file://$PROJECT_DIR$/structs/structs.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
-              <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
+              <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -184,8 +186,8 @@
         <option value="$PROJECT_DIR$/structs/strtucts.go" />
         <option value="$PROJECT_DIR$/vars/vars.go" />
         <option value="$PROJECT_DIR$/structs/structs.go" />
-        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/funcs/funcs.go" />
+        <option value="$PROJECT_DIR$/main.go" />
       </list>
     </option>
   </component>
@@ -284,7 +286,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4989035" weight="0.29285714" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.4989035" visible="true" weight="0.29285714" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5010965" side_tool="true" weight="0.2841584" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -306,7 +308,8 @@
     <MESSAGE value="Add Access-Control-Allow-Origin because Chrome" />
     <MESSAGE value="edit coordinates" />
     <MESSAGE value="stuff works" />
-    <option name="LAST_COMMIT_MESSAGE" value="stuff works" />
+    <MESSAGE value="add funx" />
+    <option name="LAST_COMMIT_MESSAGE" value="add funx" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -329,6 +332,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/structs/structs.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vars/vars.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -336,29 +346,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/structs/structs.go">
+    <entry file="file://$PROJECT_DIR$/funcs/funcs.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
+        <state relative-caret-position="165">
+          <caret line="11" column="28" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
+          <folding>
+            <element signature="e#15#79#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+        <state relative-caret-position="356">
+          <caret line="101" column="22" selection-start-line="101" selection-start-column="22" selection-end-line="101" selection-end-column="22" />
           <folding>
             <element signature="e#14#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/funcs/funcs.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
-          <folding>
-            <element signature="e#15#79#0" expanded="true" />
           </folding>
         </state>
       </provider>

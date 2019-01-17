@@ -29,15 +29,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// establish channel
-	msgs := make(chan structs.WsMsg)
+	msgs := make(chan structs.ClientRequest)
+
+	spawnFoodDone := make(chan bool)
 
 	// goroutines
 	go read(msgs, conn)
-	go checkState(conn)
+	go checkState(spawnFoodDone, conn)
 
 	// main loop
 	for {
-		cresp := &structs.WsMsg{}
+		cresp := &structs.ClientResponse{}
 		allDead := false
 		for _, item := range vars.State.Food {
 			if item.Alive {
@@ -47,11 +49,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if len(vars.State.Food) == 0 {
-			vars.State.Food = funcs.SpawnFood()
-		} else if allDead {
-			// check if the food needs to be respawned
-			vars.State.Food = funcs.SpawnFood()
+		if len(vars.State.Food) == 0 || allDead {
+			foo := make(chan []structs.Food)
+			funcs.SpawnFood(&foo)
 		} else {
 			// wait for user input
 			creq := <-msgs
@@ -87,28 +87,30 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func read(messages chan structs.WsMsg, conn *websocket.Conn) {
+func read(messages chan structs.ClientRequest, conn *websocket.Conn) {
 	for {
-		creq := &structs.WsMsg{}
+		creq := &structs.ClientRequest{}
 		_ = conn.ReadJSON(creq)
 		messages <- *creq
 	}
 }
 
-func checkState(conn *websocket.Conn) {
+func checkState(done chan bool, conn *websocket.Conn) {
 	var oldState structs.GameState
 	for {
 		if !cmp.Equal(vars.State, oldState) {
-			cresp := structs.WsMsg{"state", toInterface(vars.State)}
+			_ = <-done
+			cresp := structs.ClientResponse{"state", toInterface(vars.State)}
+			log.Println(cresp)
 			conn.WriteJSON(cresp)
 		}
 		oldState = vars.State
 	}
 }
 
-func toInterface(a interface{}) map[string]interface{} {
+func toInterface(a interface{}) interface{} {
 	foo, _ := json.Marshal(a)
 	var bar interface{}
 	_ = json.Unmarshal(foo, &bar)
-	return bar.(map[string]interface{})
+	return bar
 }

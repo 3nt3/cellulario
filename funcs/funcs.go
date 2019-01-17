@@ -8,11 +8,10 @@ import (
 	"time"
 )
 
-
-func SpawnFood() []structs.Food {
+func SpawnFood(food *chan []structs.Food) {
 	valuesSrc := []int{1, 3, 5}
 	rarities := []int{5, 4, 1}
-	
+
 	vars.State.Food = []structs.Food{}
 
 	var values []int
@@ -47,10 +46,8 @@ func SpawnFood() []structs.Food {
 
 	log.Println(vars.State.Food)
 
-	return vars.State.Food
+	*food <- vars.State.Food
 }
-
-
 
 func InitCell(name string) structs.Cell {
 	var NewCell structs.Cell
@@ -62,7 +59,7 @@ func InitCell(name string) structs.Cell {
 		pos = append(pos, r.Intn(2000)-1000)
 	}
 
-	NewCell = structs.Cell{len(vars.State.Cells), name, true,30, 0, []structs.Cell{}, pos}
+	NewCell = structs.Cell{len(vars.State.Cells), name, true, 30, 0, []structs.Cell{}, pos}
 
 	vars.State.Cells = append(vars.State.Cells, NewCell)
 	log.Printf("New Cell with id %d called  %s at %v", NewCell.Id, NewCell.Name, NewCell.Pos)
@@ -87,7 +84,7 @@ func Eat(id int, mealId int, mealType string) []structs.Cell {
 		player := &vars.State.Cells[id]
 
 		size := player.Size
-		ChangeSize(id, meal.Value);
+		ChangeSize(id, meal.Value)
 		meal.Alive = false
 
 		log.Printf("The player with id %d (%s) of size %d has eaten foodItem %d of valu e %d. The new size of player %d is now %d", player.Id, player.Name, size, meal.Id, meal.Value, player.Id, player.Size)
@@ -95,7 +92,7 @@ func Eat(id int, mealId int, mealType string) []structs.Cell {
 		meal := &vars.State.Cells[mealId]
 		player := &vars.State.Cells[id]
 
-		sizes := []int{player.Size, meal.Size};
+		sizes := []int{player.Size, meal.Size}
 		ChangeSize(id, meal.Size)
 		meal.Alive = false
 		player.Meals = append(vars.State.Cells[id].Meals, *meal)

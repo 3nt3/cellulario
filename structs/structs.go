@@ -1,10 +1,14 @@
 package structs
 
-type WsMsg struct {
+type ClientResponse struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
+}
+
+type ClientRequest struct {
 	Type string                 `json:"type"`
 	Data map[string]interface{} `json:"data"`
 }
-
 type GameState struct {
 	Cells []Cell `json:"cells"`
 	Food  []Food `json:"food"`
